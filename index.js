@@ -6,8 +6,8 @@ function getChunkData(Buffer, chunk){
   return {"stub": 'data'};
 }
 
-function readChunkIndexRange(Buffer, chunkStartIndex, chunkEndIndex, accum){
-  var readBitIndex = chunkStartIndex;
+function readChunkIndexRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
+  var readBitIndex = bufferStartIndex;
   var id = String.fromCharCode(parseInt(Buffer[readBitIndex++]))+
            String.fromCharCode(parseInt(Buffer[readBitIndex++]))+
            String.fromCharCode(parseInt(Buffer[readBitIndex++]))+
@@ -21,35 +21,35 @@ function readChunkIndexRange(Buffer, chunkStartIndex, chunkEndIndex, accum){
 
   var chunk = {
     id: id,
-    chunkStartIndex: chunkStartIndex,
+    bufferStartIndex: bufferStartIndex,
     definitionEndIndex:  readBitIndex,
     contentByteLength: chunkContentByteLength,
     childContentByteLength: childContentByteLength,
-    totalContentLength: readBitIndex + chunkContentByteLength + childContentByteLength
+    totalEndIndex: readBitIndex + chunkContentByteLength + childContentByteLength
   };
 
   accum[id] = chunk;
-
-  if(chunkContentByteLength > 0){
-    Object.assign(chunk, getChunkData(Buffer, chunk));
+  
+  if(chunk.contentByteLength == 0 && childContentByteLength == 0){
+    console.log("no content or children");
+    return accum;
   }
 
-  //children
-  if(childContentByteLength > 0) {
+  //read children
+  if(chunk.childContentByteLength > 0){
     return readChunkIndexRange(Buffer,
-                               chunk.definitionEndIndex+chunk.contentByteLength,
-                               chunk.definitionEndIndex+chunk.childContentByteLength,
+                               chunk.definitionEndIndex+contentByteLength,
+                               bufferEndIndex,
                                chunk);
-  }  
+  }
 
-  //siblings
-  if(chunk.totalContentLength < chunkEndIndex){
+  if(chunk.totalEndIndex != bufferEndIndex){
+    console.log("Not at the end");
     return readChunkIndexRange(Buffer,
-                               chunk.totalContentLength,
-                               chunkEndIndex,
+                               chunk.totalEndIndex,
+                               bufferEndIndex,
                                accum);
   }
-
 
   return accum;
 }
