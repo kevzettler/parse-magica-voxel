@@ -1,5 +1,6 @@
 var fs = require('fs');
-var byteReadPosition = 8;
+const intByteLength = 4;
+
 
 function getChunkData(Buffer, chunk){
   return {"stub": 'data'};
@@ -13,12 +14,13 @@ function readChunkIndexRange(Buffer, chunkStartIndex, chunkEndIndex, accum){
            String.fromCharCode(parseInt(Buffer[readBitIndex++]));
 
   var chunkContentByteLength = Buffer.readInt32LE(readBitIndex);
-  readBitIndex += 4;
+  readBitIndex += intByteLength;
 
   var childContentByteLength = Buffer.readInt32LE(readBitIndex);
-  readBitIndex += 4;
+  readBitIndex += intByteLength;
 
   var chunk = {
+    id: id,
     chunkStartIndex: chunkStartIndex,
     definitionEndIndex:  readBitIndex,
     contentByteLength: chunkContentByteLength,
@@ -26,12 +28,13 @@ function readChunkIndexRange(Buffer, chunkStartIndex, chunkEndIndex, accum){
     totalContentLength: readBitIndex + chunkContentByteLength + childContentByteLength
   };
 
+  accum[id] = chunk;
+
   if(chunkContentByteLength > 0){
     Object.assign(chunk, getChunkData(Buffer, chunk));
   }
 
-  accum[id] = chunk;
-
+  //siblings
   if(chunk.totalContentLength < chunkEndIndex){
     return readChunkIndexRange(Buffer,
                                chunk.totalContentLength,
@@ -39,6 +42,7 @@ function readChunkIndexRange(Buffer, chunkStartIndex, chunkEndIndex, accum){
                                accum);
   }
 
+  //children
   if(childContentByteLength > 0) {
     return readChunkIndexRange(Buffer,
                                chunk.definitionEndIndex+chunk.contentByteLength,
@@ -59,5 +63,3 @@ fs.readFile("chr_fatkid.vox", function (err, Buffer) {
   if (err) throw err;
   console.log(JSON.stringify(MagicaVoxelParser(Buffer), null, 2));
 });
-
-
