@@ -56,7 +56,7 @@ function readChunkIndexRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
 
 function MagicaVoxelParser(Buffer){
   var ret = {'VOX ': 150};
-  return readChunkIndexRange(Buffer, 20, Buffer.length, ret);
+  return readChunkIndexRange(Buffer, 8, Buffer.length, ret);
 }
 
 
