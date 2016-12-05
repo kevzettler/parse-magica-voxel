@@ -1,15 +1,15 @@
 const intByteLength = 4;
 
-function SIZEHandler(Buffer, contentStartBitIndex){
-  var readBitIndex = contentStartBitIndex;
-  var sizex = Buffer.readInt32LE(readBitIndex);
-  readBitIndex += 4;
+function SIZEHandler(Buffer, contentStartByteIndex){
+  var readByteIndex = contentStartByteIndex;
+  var sizex = Buffer.readInt32LE(readByteIndex);
+  readByteIndex += 4;
 
-  var sizey = Buffer.readInt32LE(readBitIndex);
-  readBitIndex += 4;
+  var sizey = Buffer.readInt32LE(readByteIndex);
+  readByteIndex += 4;
   
-  var sizez = Buffer.readInt32LE(readBitIndex);
-  readBitIndex += 4;
+  var sizez = Buffer.readInt32LE(readByteIndex);
+  readByteIndex += 4;
   return {
     sizex: sizex,
     sizey: sizey,
@@ -17,34 +17,34 @@ function SIZEHandler(Buffer, contentStartBitIndex){
   };
 }
 
-function XYZIHandler(Buffer, contentStartBitIndex){
-  var readBitIndex = contentStartBitIndex;
-  var numVoxels = Math.abs(Buffer.readInt32LE(readBitIndex));
-  readBitIndex += 4;
+function XYZIHandler(Buffer, contentStartByteIndex){
+  var readByteIndex = contentStartByteIndex;
+  var numVoxels = Math.abs(Buffer.readInt32LE(readByteIndex));
+  readByteIndex += 4;
 
   voxelData = []
   for (var n = 0; n < numVoxels; n++) {
     voxelData[n] = {
-      x: Buffer[readBitIndex++] & 0xFF,
-      y: Buffer[readBitIndex++] & 0xFF,
-      z: Buffer[readBitIndex++] & 0xFF,
-      color: Buffer[readBitIndex++] & 0xFF,
+      x: Buffer[readByteIndex++] & 0xFF,
+      y: Buffer[readByteIndex++] & 0xFF,
+      z: Buffer[readByteIndex++] & 0xFF,
+      color: Buffer[readByteIndex++] & 0xFF,
     };
   }
 
   return {voxelData: voxelData};
 }
 
-function RGBAHandler(Buffer, contentStartBitIndex){
-  var readBitIndex = contentStartBitIndex;
+function RGBAHandler(Buffer, contentStartByteIndex){
+  var readByteIndex = contentStartByteIndex;
   
   var colors = new Array();
   for (var n = 0; n < 256; n++) {
     colors[n] = {
-      r: Buffer[readBitIndex++] & 0xFF,
-      g: Buffer[readBitIndex++] & 0xFF,
-      b: Buffer[readBitIndex++] & 0xFF,
-      a: Buffer[readBitIndex++] & 0xFF,
+      r: Buffer[readByteIndex++] & 0xFF,
+      g: Buffer[readByteIndex++] & 0xFF,
+      b: Buffer[readByteIndex++] & 0xFF,
+      a: Buffer[readByteIndex++] & 0xFF,
     }
   }
   return {colors: colors};
@@ -63,24 +63,30 @@ function getChunkData(Buffer, id, definitionEndIndex){
   return chunkHandlers[id](Buffer, definitionEndIndex);
 }
 
+function readId(Buffer, idStartIndexPos){
+  var id = String.fromCharCode(parseInt(Buffer[idStartIndexPos++]))+
+           String.fromCharCode(parseInt(Buffer[idStartIndexPos++]))+
+           String.fromCharCode(parseInt(Buffer[idStartIndexPos++]))+
+           String.fromCharCode(parseInt(Buffer[idStartIndexPos++]));
+
+  return id;
+}
+
 function recReadChunksInRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
-  var readBitIndex = bufferStartIndex;
-  var id = String.fromCharCode(parseInt(Buffer[readBitIndex++]))+
-           String.fromCharCode(parseInt(Buffer[readBitIndex++]))+
-           String.fromCharCode(parseInt(Buffer[readBitIndex++]))+
-           String.fromCharCode(parseInt(Buffer[readBitIndex++]));
+  var readByteIndex = bufferStartIndex;
+  var id = readId(Buffer, bufferStartIndex);
 
-  var chunkContentByteLength = Buffer.readInt32LE(readBitIndex);
-  readBitIndex += intByteLength;
+  var chunkContentByteLength = Buffer.readInt32LE(readByteIndex+=intByteLength);
+  readByteIndex += intByteLength;
 
-  var childContentByteLength = Buffer.readInt32LE(readBitIndex);
-  readBitIndex += intByteLength;
+  var childContentByteLength = Buffer.readInt32LE(readByteIndex);
+  readByteIndex += intByteLength;
 
   var bufferStartIndex = bufferStartIndex;
-  var definitionEndIndex =  readBitIndex;
+  var definitionEndIndex =  readByteIndex;
   var contentByteLength = chunkContentByteLength;
   var childContentByteLength = childContentByteLength;
-  var totalEndIndex = readBitIndex + chunkContentByteLength + childContentByteLength;
+  var totalEndIndex = readByteIndex + chunkContentByteLength + childContentByteLength;
 
   var chunk = {};
 
@@ -112,6 +118,11 @@ function recReadChunksInRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
   }
 
   return accum;
+}
+
+function parseHeader(Buffer){
+  var ret = {};
+  ret[readId(Buffer, 0)] = 155;
 }
 
 function MagicaVoxelParser(Buffer){
