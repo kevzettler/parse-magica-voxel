@@ -1,9 +1,49 @@
 var fs = require('fs');
 const intByteLength = 4;
 
+function SIZEHandler(Buffer, chunk){
+  var readBitIndex = chunk.definitionEndIndex;
+  var sizex = Buffer.readInt32LE(readBitIndex);
+  readBitIndex += 4;
+
+  var sizey = Buffer.readInt32LE(readBitIndex);
+  readBitIndex += 4;
+  
+  var sizez = Buffer.readInt32LE(readBitIndex);
+  readBitIndex += 4;
+  return {
+    sizex: sizex,
+    sizey: sizey,
+    sizez: sizez
+  };
+}
+
+function XYZIHandler(Buffer, chunk){
+  var readBitIndex = chunk.definitionEndIndex;
+  var numVoxels = Math.abs(Buffer.readInt32LE(readBitIndex));
+  readBitIndex += 4;
+
+  voxelData = []
+  for (var n = 0; n < numVoxels; n++) {
+    voxelData[n] = {
+      x: Buffer[readBitIndex++] & 0xFF,
+      y: Buffer[readBitIndex++] & 0xFF,
+      z: Buffer[readBitIndex++] & 0xFF,
+      color: Buffer[readBitIndex++] & 0xFF,
+    };
+  }
+
+  return {voxelData: voxelData};
+}
+
+const chunkHandlers = {
+  SIZE: SIZEHandler,
+  XYZI: XYZIHandler,
+  RGBA: function(){return {};}
+};
 
 function getChunkData(Buffer, chunk){
-  return {"stub": 'data'};
+  return chunkHandlers[chunk.id](Buffer, chunk);
 }
 
 function readChunkIndexRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
@@ -35,16 +75,20 @@ function readChunkIndexRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
     return accum;
   }
 
+  if(chunk.contentByteLength && chunk.id){
+    Object.assign(chunk, getChunkData(Buffer, chunk));
+  }
+
   //read children
   if(chunk.childContentByteLength > 0){
     return readChunkIndexRange(Buffer,
-                               chunk.definitionEndIndex+contentByteLength,
+                               chunk.definitionEndIndex+chunk.contentByteLength,
                                bufferEndIndex,
                                chunk);
   }
 
+  //accumulate siblings
   if(chunk.totalEndIndex != bufferEndIndex){
-    console.log("Not at the end");
     return readChunkIndexRange(Buffer,
                                chunk.totalEndIndex,
                                bufferEndIndex,
