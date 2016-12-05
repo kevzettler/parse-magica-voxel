@@ -123,10 +123,11 @@ function recReadChunksInRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
 function parseHeader(Buffer){
   var ret = {};
   ret[readId(Buffer, 0)] = 155;
+  return ret;
 }
 
 function MagicaVoxelParser(Buffer){
-  var header = {'VOX ': 150};
+  var header = parseHeader(Buffer);
   return Object.assign(header, recReadChunksInRange(Buffer, 8, Buffer.length, header));
 }
 
