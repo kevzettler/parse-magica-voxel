@@ -36,14 +36,29 @@ function XYZIHandler(Buffer, chunk){
   return {voxelData: voxelData};
 }
 
+function RGBAHandler(Buffer, chunk){
+  var readBitIndex = chunk.definitionEndIndex;
+  
+  var colors = new Array();
+  for (var n = 0; n < 256; n++) {
+    colors[n] = {
+      r: Buffer[readBitIndex++] & 0xFF,
+      g: Buffer[readBitIndex++] & 0xFF,
+      b: Buffer[readBitIndex++] & 0xFF,
+      a: Buffer[readBitIndex++] & 0xFF,
+    }
+  }
+  return {colors: colors};
+}
+
 const chunkHandlers = {
   SIZE: SIZEHandler,
   XYZI: XYZIHandler,
-  RGBA: function(){return {};}
+  RGBA: RGBAHandler
 };
 
 function getChunkData(Buffer, chunk){
-  return chunkHandlers[chunk.id](Buffer, chunk);
+  return chunkHandlers[chunk.id] ? chunkHandlers[chunk.id](Buffer, chunk) : null;
 }
 
 function readChunkIndexRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
@@ -99,8 +114,8 @@ function readChunkIndexRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
 }
 
 function MagicaVoxelParser(Buffer){
-  var ret = {'VOX ': 150};
-  return readChunkIndexRange(Buffer, 8, Buffer.length, ret);
+  var header = {'VOX ': 150};
+  return Object.assign(header, readChunkIndexRange(Buffer, 8, Buffer.length, header));
 }
 
 
@@ -108,43 +123,3 @@ fs.readFile("chr_fatkid.vox", function (err, Buffer) {
   if (err) throw err;
   console.log(JSON.stringify(MagicaVoxelParser(Buffer), null, 2));
 });
-
-
-/* {
- *   "VOX ": 150,
- *   "MAIN": {
- *     "id": "MAIN",
- *     "chunkStartIndex": 8,
- *     "definitionEndIndex": 20,
- *     "contentByteLength": 0,
- *     "childContentByteLength": 2284,
- *     "totalContentLength": 2304
- *   },
- *   "SIZE": {
- *     "id": "SIZE",
- *     "chunkStartIndex": 20,
- *     "definitionEndIndex": 32,
- *     "contentByteLength": 12,
- *     "childContentByteLength": 0,
- *     "totalContentLength": 44,
- *     "stub": "data"
- *   },
- *   "XYZI": {
- *     "id": "XYZI",
- *     "chunkStartIndex": 44,
- *     "definitionEndIndex": 56,
- *     "contentByteLength": 1212,
- *     "childContentByteLength": 0,
- *     "totalContentLength": 1268,
- *     "stub": "data"
- *   },
- *   "RGBA": {
- *     "id": "RGBA",
- *     "chunkStartIndex": 1268,
- *     "definitionEndIndex": 1280,
- *     "contentByteLength": 1024,
- *     "childContentByteLength": 0,
- *     "totalContentLength": 2304,
- *     "stub": "data"
- *   }
- * }*/
