@@ -128,7 +128,12 @@ function parseHeader(Buffer){
 
 function MagicaVoxelParser(Buffer){
   var header = parseHeader(Buffer);
-  return Object.assign(header, recReadChunksInRange(Buffer, 8, Buffer.length, header));
+  return Object.assign(header, recReadChunksInRange(
+    Buffer,
+    8, //start on the 8th byte as the header dosen't follow RIFF pattern.
+    Buffer.length,
+    header
+  ));
 }
 
 module.exports = MagicaVoxelParser;
