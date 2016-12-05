@@ -11,9 +11,9 @@ function SIZEHandler(Buffer, contentStartByteIndex){
   var sizez = Buffer.readInt32LE(readByteIndex);
   readByteIndex += 4;
   return {
-    sizex: sizex,
-    sizey: sizey,
-    sizez: sizez
+    x: sizex,
+    y: sizey,
+    z: sizez
   };
 }
 
