@@ -122,7 +122,7 @@ function recReadChunksInRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
 
 function parseHeader(Buffer){
   var ret = {};
-  ret[readId(Buffer, 0)] = 155;
+  ret[readId(Buffer, 0)] = Buffer.readInt32LE(intByteLength);
   return ret;
 }
 
