@@ -1,3 +1,5 @@
+const Buffer = require('buffer').Buffer;
+const isBuffer = require('is-buffer');
 const intByteLength = 4;
 
 function SIZEHandler(Buffer, contentStartByteIndex){
@@ -126,12 +128,22 @@ function parseHeader(Buffer){
   return ret;
 }
 
-function MagicaVoxelParser(Buffer){
-  var header = parseHeader(Buffer);
+function MagicaVoxelParser(BufferLikeData){
+  var buffer = BufferLikeData;
+  
+  if(!isBuffer(buffer)){
+    try {
+      buffer = new Buffer( new Uint8Array(BufferLikeData) );
+    }catch (ex){
+      throw ex
+    }
+  }
+    
+  var header = parseHeader(buffer);
   return Object.assign(header, recReadChunksInRange(
-    Buffer,
+    buffer,
     8, //start on the 8th byte as the header dosen't follow RIFF pattern.
-    Buffer.length,
+    buffer.length,
     header
   ));
 }

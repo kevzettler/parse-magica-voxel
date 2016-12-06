@@ -25,5 +25,9 @@
   "bugs": {
     "url": "https://github.com/kevzettler/magicavoxel-parser/issues"
   },
-  "homepage": "https://github.com/kevzettler/magicavoxel-parser#readme"
+  "homepage": "https://github.com/kevzettler/magicavoxel-parser#readme",
+  "dependencies": {
+    "Buffer": "0.0.0",
+    "is-buffer": "^1.1.4"
+  }
 }
