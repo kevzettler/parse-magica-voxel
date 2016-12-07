@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/kevzettler/magicavoxel-parser#readme",
   "dependencies": {
-    "Buffer": "0.0.0",
+    "buffer": "^5.0.2",
     "is-buffer": "^1.1.4"
   }
 }
