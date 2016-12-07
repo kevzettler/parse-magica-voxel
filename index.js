@@ -2,8 +2,6 @@ const Buffer = require('buffer').Buffer;
 const isBuffer = require('is-buffer');
 const intByteLength = 4;
 
-console.log("Buffer included??", Buffer);
-
 function SIZEHandler(Buffer, contentStartByteIndex){
   var readByteIndex = contentStartByteIndex;
   var sizex = Buffer.readInt32LE(readByteIndex);
@@ -132,7 +130,6 @@ function parseHeader(Buffer){
 
 function MagicaVoxelParser(BufferLikeData){
   var buffer = BufferLikeData;
-  console.log('wtf is Buffer', Buffer);
   if(!isBuffer(buffer)){
     try {
       buffer = new Buffer( new Uint8Array(BufferLikeData) );
