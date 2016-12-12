@@ -1,14 +1,14 @@
 {
-  "name": "magicavoxel-parser",
+  "name": "parse-magica-voxel",
   "version": "1.0.0",
-  "description": "load Magica Voxel parser ",
+  "description": "parse magica voxel .vox format to JS objects",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kevzettler/magicavoxel-parser.git"
+    "url": "git+https://github.com/kevzettler/parse-magica-voxel.git"
   },
   "keywords": [
     "Vox",
@@ -23,9 +23,9 @@
   "author": "kevzettler",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kevzettler/magicavoxel-parser/issues"
+    "url": "https://github.com/kevzettler/parse-magica-voxel/issues"
   },
-  "homepage": "https://github.com/kevzettler/magicavoxel-parser#readme",
+  "homepage": "https://github.com/kevzettler/parse-magica-voxel#readme",
   "dependencies": {
     "buffer": "^5.0.2",
     "is-buffer": "^1.1.4"

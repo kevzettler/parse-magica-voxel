@@ -23,10 +23,10 @@ const defaultPalette = [
 function useDefaultPalette(){
   var colors = defaultPalette.map(function(hex){
     return {
-      r: hex >> 16,
-      g: hex >> 8 & 0xFF,
-      b: hex & 0xFF,
-      a: 255
+      b: (hex & 0xff0000) >> 16, 
+      g: (hex & 0x00ff00) >> 8, 
+      r: (hex & 0x0000ff),      
+      a: 1
     }
   });
 
@@ -177,8 +177,7 @@ function MagicaVoxelParser(BufferLikeData){
     header
   );
 
-  if(!body.RGBA){
-    console.log("using default palette");
+  if(body.RGBA){
     body.RGBA = useDefaultPalette();
   }
 
