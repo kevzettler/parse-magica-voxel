@@ -177,7 +177,7 @@ function MagicaVoxelParser(BufferLikeData){
     header
   );
 
-  if(body.RGBA){
+  if(!body.RGBA){
     body.RGBA = useDefaultPalette();
   }
 
