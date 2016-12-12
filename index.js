@@ -30,7 +30,7 @@ function useDefaultPalette(){
     }
   });
 
-  return {colors: colors};  
+  return colors;
 }
 
 function RGBAHandler(Buffer, contentStartByteIndex){
@@ -45,7 +45,7 @@ function RGBAHandler(Buffer, contentStartByteIndex){
       a: Buffer[readByteIndex++] & 0xFF,
     }
   }
-  return {colors: colors};
+  return colors;
 }
 
 function SIZEHandler(Buffer, contentStartByteIndex){
@@ -76,17 +76,22 @@ function XYZIHandler(Buffer, contentStartByteIndex){
       x: Buffer[readByteIndex++] & 0xFF,
       y: Buffer[readByteIndex++] & 0xFF,
       z: Buffer[readByteIndex++] & 0xFF,
-      color: Buffer[readByteIndex++] & 0xFF,
+      c: Buffer[readByteIndex++] & 0xFF, //color index in RGBA
     };
   }
 
-  return {voxelData: voxelData};
+  return voxelData;
+}
+
+function PACKHandler(Buffer, contentStartByteIndex){
+  return Buffer.readInt32LE(contentStartByteIndex);
 }
 
 const chunkHandlers = {
   SIZE: SIZEHandler,
   XYZI: XYZIHandler,
-  RGBA: RGBAHandler
+  RGBA: RGBAHandler,
+  PACK: PACKHandler
 };
 
 function getChunkData(Buffer, id, definitionEndIndex){
@@ -121,9 +126,9 @@ function recReadChunksInRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
   var childContentByteLength = childContentByteLength;
   var totalEndIndex = readByteIndex + chunkContentByteLength + childContentByteLength;
 
-  var chunk = {};
-
-  accum[id] = chunk;
+  if(accum[id]){
+    console.log("already have an id for", id);
+  }
   
   if(contentByteLength == 0 && childContentByteLength == 0){
     console.log("no content or children");
@@ -131,7 +136,14 @@ function recReadChunksInRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
   }
 
   if(contentByteLength && id){
-    Object.assign(chunk, getChunkData(Buffer, id, definitionEndIndex));
+    var chunkContent = getChunkData(Buffer, id, definitionEndIndex);
+    if(!accum[id]){
+      accum[id] = chunkContent;      
+    }else if(accum[id] && !accum[id].length){
+      accum[id] = [accum[id], chunkContent];
+    }else if(accum[id] && accum[id].length){
+      accum[id].push(chunkContent);
+    }
   }
 
   //read children
@@ -139,7 +151,7 @@ function recReadChunksInRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
     return recReadChunksInRange(Buffer,
                                definitionEndIndex+contentByteLength,
                                bufferEndIndex,
-                               chunk);
+                               {});
   }
 
   //accumulate siblings
