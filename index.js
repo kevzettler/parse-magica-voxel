@@ -87,18 +87,44 @@ function PACKHandler(Buffer, contentStartByteIndex){
   return Buffer.readInt32LE(contentStartByteIndex);
 }
 
+function MATTHandler(Buffer, contentStartByteIndex, totalEndIndex){
+  var readByteIndex = contentStartByteIndex;
+  var ret = {};
+
+  ret.id = Buffer.readInt32LE(readByteIndex);
+  readByteIndex += 4;
+
+  ret.materialType = Buffer.readInt32LE(readByteIndex);
+  readByteIndex += 4;
+
+  ret.materialWeight = Buffer.readFloatLE(readByteIndex);
+  readByteIndex += 4;
+
+  ret.propertyBits = Buffer.readInt32LE(readByteIndex);
+  readByteIndex += 4;
+
+  ret.normalizedPropertyValues = [];
+  while(readByteIndex < totalEndIndex){
+    ret.normalizedPropertyValues.push(Buffer.readFloatLE(readByteIndex));
+    readByteIndex += 4;
+  }
+
+  return ret;
+}
+
 const chunkHandlers = {
   SIZE: SIZEHandler,
   XYZI: XYZIHandler,
   RGBA: RGBAHandler,
-  PACK: PACKHandler
+  PACK: PACKHandler,
+  MATT: MATTHandler
 };
 
-function getChunkData(Buffer, id, definitionEndIndex){
+function getChunkData(Buffer, id, definitionEndIndex, totalEndIndex){
   if(!chunkHandlers[id]){
     throw "Unsupported chunk type " + id;
   }
-  return chunkHandlers[id](Buffer, definitionEndIndex);
+  return chunkHandlers[id](Buffer, definitionEndIndex, totalEndIndex);
 }
 
 function readId(Buffer, idStartIndexPos){
@@ -126,17 +152,13 @@ function recReadChunksInRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
   var childContentByteLength = childContentByteLength;
   var totalEndIndex = readByteIndex + chunkContentByteLength + childContentByteLength;
 
-  if(accum[id]){
-    console.log("already have an id for", id);
-  }
-  
   if(contentByteLength == 0 && childContentByteLength == 0){
     console.log("no content or children");
     return accum;
   }
 
   if(contentByteLength && id){
-    var chunkContent = getChunkData(Buffer, id, definitionEndIndex);
+    var chunkContent = getChunkData(Buffer, id, definitionEndIndex, totalEndIndex);
     if(!accum[id]){
       accum[id] = chunkContent;      
     }else if(accum[id] && !accum[id].length){
