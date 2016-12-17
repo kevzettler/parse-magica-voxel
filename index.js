@@ -193,7 +193,7 @@ function parseHeader(Buffer){
   return ret;
 }
 
-function MagicaVoxelParser(BufferLikeData){
+function parseMagicaVoxel(BufferLikeData){
   var buffer = BufferLikeData;
   if(!isBuffer(buffer)){
     try {
@@ -218,4 +218,4 @@ function MagicaVoxelParser(BufferLikeData){
   return Object.assign(header, body);  
 }
 
-module.exports = MagicaVoxelParser;
+module.exports = parseMagicaVoxel;
