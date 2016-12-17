@@ -29,5 +29,6 @@
   "dependencies": {
     "buffer": "^5.0.2",
     "is-buffer": "^1.1.4"
-  }
+  },
+  "devDependencies": {}
 }
