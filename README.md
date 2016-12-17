@@ -1,7 +1,7 @@
 # Parse MagicaVoxel .vox file format
 
 ## Usage
-see [examples](/examples)
+see [examples](/example)
 
 ```javascript
 var fs = require('fs');
