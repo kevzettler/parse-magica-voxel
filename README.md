@@ -1,4 +1,5 @@
 # Parse MagicaVoxel .vox file format
+https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt
 
 ## Usage
 see [examples](/example)

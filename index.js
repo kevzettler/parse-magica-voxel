@@ -39,10 +39,10 @@ function RGBAHandler(Buffer, contentStartByteIndex){
   var colors = new Array();
   for (var n = 0; n < 256; n++) {
     colors[n] = {
-      r: Buffer[readByteIndex++] & 0xFF,
-      g: Buffer[readByteIndex++] & 0xFF,
-      b: Buffer[readByteIndex++] & 0xFF,
-      a: Buffer[readByteIndex++] & 0xFF,
+      r: Buffer[readByteIndex++],
+      g: Buffer[readByteIndex++],
+      b: Buffer[readByteIndex++],
+      a: Buffer[readByteIndex++],
     }
   }
   return colors;
