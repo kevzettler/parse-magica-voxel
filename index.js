@@ -20,6 +20,8 @@ const defaultPalette = [
   0x880000, 0x770000, 0x550000, 0x440000, 0x220000, 0x110000, 0xeeeeee, 0xdddddd, 0xbbbbbb, 0xaaaaaa, 0x888888, 0x777777, 0x555555, 0x444444, 0x222222, 0x111111
 ];
 
+console.log(defaultPalette.length);
+
 function useDefaultPalette(){
   var colors = defaultPalette.map(function(hex){
     return {
@@ -33,11 +35,13 @@ function useDefaultPalette(){
   return colors;
 }
 
+window.useDefaultPalette = useDefaultPalette;
+
 function RGBAHandler(Buffer, contentStartByteIndex){
   var readByteIndex = contentStartByteIndex;
-  
+
   var colors = new Array();
-  for (var n = 0; n < 256; n++) {
+  for (var n = 1; n < 256; n++) {
     colors[n] = {
       r: Buffer[readByteIndex++],
       g: Buffer[readByteIndex++],
@@ -45,6 +49,73 @@ function RGBAHandler(Buffer, contentStartByteIndex){
       a: Buffer[readByteIndex++],
     }
   }
+
+  var paletteContainer = document.createElement('div');
+  paletteContainer.id = 'palette-container';
+  paletteContainer.style.position = 'absolute';
+  paletteContainer.style.width = '100%';
+  paletteContainer.style.height = '100%';
+  paletteContainer.style.display = 'block';
+  paletteContainer.style.top = "0px";
+  paletteContainer.style.left = "0px";  
+  
+
+  var rgbContainer = document.createElement('div');
+  rgbContainer.id = 'rgb-container';
+  rgbContainer.style.width = "88px";
+  rgbContainer.style.float = 'left';
+  colors.forEach(function(color){
+    var colorSquare = document.createElement('div');
+    colorSquare.className = 'color';
+    colorSquare.style.height = "10px";
+    colorSquare.style.width = "10px";
+    colorSquare.style.display = "block";
+    colorSquare.style.float = "left";    
+    colorSquare.style.backgroundColor = "rgba("+color.r+", "+color.g+", "+color.b+", 1)";
+    rgbContainer.appendChild(colorSquare);
+  });
+  paletteContainer.appendChild(rgbContainer);  
+
+  var defaultContainer = document.createElement('div');
+  defaultContainer.id = 'rgb-container';
+  defaultContainer.style.width = "88px";
+  defaultContainer.style.float = "left";
+  useDefaultPalette().forEach(function(color){
+    var colorSquare = document.createElement('div');
+    colorSquare.className = 'color';
+    colorSquare.style.height = "10px";
+    colorSquare.style.width = "10px";
+    colorSquare.style.display = "block";
+    colorSquare.style.float = "left";
+    colorSquare.style.backgroundColor = "rgba("+color.r+", "+color.g+", "+color.b+", 1)";
+    defaultContainer.appendChild(colorSquare);
+  });  
+  paletteContainer.appendChild(defaultContainer);
+
+  document.body.appendChild(paletteContainer);
+
+  /* useDefaultPalette().forEach(function(defaultColor, index){
+   *   var rgbaColor = colors[index];
+   *   if(rgbaColor.r !== defaultColor.r){
+   *     debugger;
+   *   }
+
+   *   if(rgbaColor.g !== defaultColor.g){
+   *     debugger;
+   *   }
+
+   *   if(rgbaColor.b !== defaultColor.b){
+   *     debugger;
+   *   }
+
+   *   if(rgbaColor.a !== defaultColor.a){
+   *     debugger;
+   *   }*/        
+  //});
+
+  
+
+  debugger;
   return colors;
 }
 
