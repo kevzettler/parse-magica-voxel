@@ -1,6 +1,6 @@
 {
   "name": "parse-magica-voxel",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Parse MagicaVoxel .vox format to JS objects",
   "main": "index.js",
   "scripts": {
