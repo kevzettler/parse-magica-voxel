@@ -24,8 +24,14 @@ fs.readFile("./chr_old.vox", function (err, Buffer) {
     "y": 21,
     "z": 20
   },
-  "XYZI": [...],
-  "RGBA": [...],
+  "XYZI": [
+   {x, y, z, c},
+   ...
+  ],
+  "RGBA": [
+   {r,g,b,a},
+   ...
+  ],
 }       
 ```
 

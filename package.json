@@ -1,8 +1,8 @@
 {
   "name": "parse-magica-voxel",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Parse MagicaVoxel .vox format to JS objects",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
