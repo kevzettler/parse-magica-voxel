@@ -1,5 +1,7 @@
 # Parse MagicaVoxel .vox file format
+Javascript parser for MagicaVoxel .vox file format
 https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt
+Works in Browser and Node.js server environments
 
 ## Usage
 see [examples](/example)
@@ -26,11 +28,11 @@ fs.readFile("./chr_old.vox", function (err, Buffer) {
   },
   "XYZI": [
    {x, y, z, c},
-   ...
+   //... more verts
   ],
   "RGBA": [
    {r,g,b,a},
-   ...
+   //... more rgba values
   ],
 }       
 ```
