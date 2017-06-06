@@ -5,12 +5,18 @@ https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.
 
 Works in Browser and Node.js server environments
 
+## Instal
+
+```
+npm install parse-magica-voxel
+```
+
 ## Usage
 see [examples](/example)
 
 ```javascript
 var fs = require('fs');
-var parseMagicaVoxel = require('../index.js');
+var parseMagicaVoxel = require('parse-magica-voxel');
 
 fs.readFile("./chr_old.vox", function (err, Buffer) {
   if (err) throw err;
@@ -30,7 +36,7 @@ fs.readFile("./chr_old.vox", function (err, Buffer) {
   },
   "XYZI": [
    {x, y, z, c},
-   //... more verts
+   //... more voxels
   ],
   "RGBA": [
    {r,g,b,a},
