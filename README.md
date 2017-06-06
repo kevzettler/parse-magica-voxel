@@ -5,7 +5,7 @@ https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.
 
 Works in Browser and Node.js server environments
 
-## Instal
+## Install
 
 ```
 npm install parse-magica-voxel
