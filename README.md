@@ -26,8 +26,9 @@ fs.readFile("./chr_old.vox", function (err, Buffer) {
 ```
 
 * Browser
+
 You will have to bundle the module with Webpack or Browserify and load the voxel file using `fetch` or another `XMLHttpRequest` utility
-```
+```javascript
 var parseMagicaVoxel = require('parse-magica-voxel');
 var myRequest = new Request('magicavoxel.vox');
 fetch(myRequest).then(function(response) {
