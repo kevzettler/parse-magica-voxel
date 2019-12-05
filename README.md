@@ -14,6 +14,7 @@ npm install parse-magica-voxel
 ## Usage
 see [examples](/example)
 
+* Node.js
 ```javascript
 var fs = require('fs');
 var parseMagicaVoxel = require('parse-magica-voxel');
@@ -22,6 +23,20 @@ fs.readFile("./chr_old.vox", function (err, Buffer) {
   if (err) throw err;
   console.log(JSON.stringify(parseMagicaVoxel(Buffer)));
 });
+```
+
+* Browser
+You will have to bundle the module with Webpack or Browserify and load the voxel file using `fetch` or another `XMLHttpRequest` utility
+```
+var parseMagicaVoxel = require('parse-magica-voxel');
+var myRequest = new Request('magicavoxel.vox');
+fetch(myRequest).then(function(response) {
+    return response.arrayBuffer();
+  }).then(function(buffer) {
+     console.log(JSON.stringify(parseMagicaVoxel(Buffer));
+    });
+  });
+};
 ```
 
 ### Result
