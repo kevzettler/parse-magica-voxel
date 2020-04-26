@@ -9,7 +9,7 @@ module.exports = function readDict(Buffer, readByteIndex){
     const keyByteLength = Buffer.readInt32LE(readByteIndex);
     readByteIndex += 4;
 
-    const key = Buffer.readInt8LE(keyByteLength);
+    const key = Buffer.readInt8(keyByteLength);
     readByteIndex += 1 * keyByteLength;
 
     const valueByteLength = Buffer.readInt32LE(readByteIndex);
