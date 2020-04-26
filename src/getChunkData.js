@@ -8,6 +8,7 @@ const nGRPHandler = require('./chunkHandlers/nGRP');
 const nSHPHandler = require('./chunkHandlers/nSHP');
 const LAYRHandler = require('./chunkHandlers/LAYR');
 const MATLHandler = require('./chunkHandlers/MATL');
+const rOBJHandler = require('./chunkHandlers/rOBJ');
 
 const chunkHandlers = {
   SIZE: SIZEHandler,
@@ -20,6 +21,7 @@ const chunkHandlers = {
   nSHP: nSHPHandler,
   LAYR: LAYRHandler,
   MATL: MATLHandler,
+  rOBJ: rOBJHandler,
 };
 
 module.exports = function getChunkData(Buffer, id, definitionEndIndex, totalEndIndex){
