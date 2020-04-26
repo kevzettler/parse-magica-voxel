@@ -28,6 +28,7 @@
   "homepage": "https://github.com/kevzettler/parse-magica-voxel#readme",
   "dependencies": {
     "buffer": "^5.0.2",
+    "debug": "^4.1.1",
     "is-buffer": "^1.1.4"
   },
   "devDependencies": {}

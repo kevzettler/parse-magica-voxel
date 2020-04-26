@@ -1,6 +1,7 @@
 const getChunkData = require('./getChunkData');
 const readId = require('./readId.js');
 const intByteLength = 4;  
+const debug = require('debug')('parse-magica-voxel')
 
 module.exports = function recReadChunksInRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
   var readByteIndex = bufferStartIndex;
@@ -20,6 +21,7 @@ module.exports = function recReadChunksInRange(Buffer, bufferStartIndex, bufferE
 
   if(contentByteLength == 0 && childContentByteLength == 0){
     console.log("no content or children");
+    debug("no content or children for", id);
     return accum;
   }
 
