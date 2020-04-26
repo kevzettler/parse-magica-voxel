@@ -4,6 +4,7 @@ const XYZIHandler = require('./chunkHandlers/XYZI');
 const PACKHandler = require('./chunkHandlers/PACK');
 const MATTHandler = require('./chunkHandlers/MATT');
 const nTRNHandler = require('./chunkHandlers/nTRN');
+const nGRPHandler = require('./chunkHandlers/nGRP');
 
 const chunkHandlers = {
   SIZE: SIZEHandler,
@@ -12,6 +13,7 @@ const chunkHandlers = {
   PACK: PACKHandler,
   MATT: MATTHandler,
   nTRN: nTRNHandler,
+  nGRP: nGRPHandler,
 };
 
 module.exports = function getChunkData(Buffer, id, definitionEndIndex, totalEndIndex){
