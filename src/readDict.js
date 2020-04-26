@@ -18,7 +18,7 @@ module.exports = function readDict(Buffer, readByteIndex){
     const value = Buffer.readInt8(valueByteLength);
     readByteIndex += 1 * valueByteLength;
 
-    ret.attributes[key] = value;
+    ret[key] = value;
   }
 
   return ret;
