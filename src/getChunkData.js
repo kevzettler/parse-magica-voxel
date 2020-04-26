@@ -3,12 +3,15 @@ const RGBAHandler = require('./chunkHandlers/RGBA');
 const XYZIHandler = require('./chunkHandlers/XYZI');
 const PACKHandler = require('./chunkHandlers/PACK');
 const MATTHandler = require('./chunkHandlers/MATT');
+const nTRNHandler = require('./chunkHandlers/nTRN');
+
 const chunkHandlers = {
   SIZE: SIZEHandler,
   XYZI: XYZIHandler,
   RGBA: RGBAHandler,
   PACK: PACKHandler,
-  MATT: MATTHandler
+  MATT: MATTHandler,
+  nTRN: nTRNHandler,
 };
 
 module.exports = function getChunkData(Buffer, id, definitionEndIndex, totalEndIndex){
