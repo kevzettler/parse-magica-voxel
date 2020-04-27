@@ -1,3 +1,3 @@
-module.exports = function PACKHandler(Buffer, contentStartByteIndex){
-  return Buffer.readInt32LE(contentStartByteIndex);
+module.exports = function PACKHandler(state){
+  return state.Buffer.readInt32LE(state.readByteIndex);
 };

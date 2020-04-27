@@ -1,22 +1,22 @@
-module.exports = function readDict(Buffer, readByteIndex){
+module.exports = function readDict(state){
   const ret = {};
 
-  const attributePairLength = Buffer.readInt32LE(readByteIndex);
-  readByteIndex += 4;
+  const attributePairLength = state.Buffer.readInt32LE(state.readByteIndex);
+  state.readByteIndex += 4;
 
   // Read all the key value pairs of the DICT
   for(var i=0; i<attributePairLength; i++){
-    const keyByteLength = Buffer.readInt32LE(readByteIndex);
-    readByteIndex += 4;
+    const keyByteLength = state.Buffer.readInt32LE(state.readByteIndex);
+    state.readByteIndex += 4;
 
-    const key = Buffer.readInt8(keyByteLength);
-    readByteIndex += 1 * keyByteLength;
+    const key = state.Buffer.readInt8(keyByteLength);
+    state.readByteIndex += 1 * keyByteLength;
 
-    const valueByteLength = Buffer.readInt32LE(readByteIndex);
-    readByteIndex += 4;
+    const valueByteLength = state.Buffer.readInt32LE(state.readByteIndex);
+    state.readByteIndex += 4;
 
-    const value = Buffer.readInt8(valueByteLength);
-    readByteIndex += 1 * valueByteLength;
+    const value = state.Buffer.readInt8(valueByteLength);
+    state.readByteIndex += 1 * valueByteLength;
 
     ret[key] = value;
   }

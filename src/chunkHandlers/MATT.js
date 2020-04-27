@@ -1,23 +1,22 @@
-module.exports = function MATTHandler(Buffer, contentStartByteIndex, totalEndIndex){
-  var readByteIndex = contentStartByteIndex;
+module.exports = function MATTHandler(state, startIndex, endIndex){
   var ret = {};
 
-  ret.id = Buffer.readInt32LE(readByteIndex);
-  readByteIndex += 4;
+  ret.id = state.Buffer.readInt32LE(state.readByteIndex);
+  state.readByteIndex += 4;
 
-  ret.materialType = Buffer.readInt32LE(readByteIndex);
-  readByteIndex += 4;
+  ret.materialType = state.Buffer.readInt32LE(state.readByteIndex);
+  state.readByteIndex += 4;
 
-  ret.materialWeight = Buffer.readFloatLE(readByteIndex);
-  readByteIndex += 4;
+  ret.materialWeight = state.Buffer.readFloatLE(state.readByteIndex);
+  state.readByteIndex += 4;
 
-  ret.propertyBits = Buffer.readInt32LE(readByteIndex);
-  readByteIndex += 4;
+  ret.propertyBits = state.Buffer.readInt32LE(state.readByteIndex);
+  state.readByteIndex += 4;
 
   ret.normalizedPropertyValues = [];
-  while(readByteIndex < totalEndIndex){
-    ret.normalizedPropertyValues.push(Buffer.readFloatLE(readByteIndex));
-    readByteIndex += 4;
+  while(state.readByteIndex < totalEndIndex){
+    ret.normalizedPropertyValues.push(state.Buffer.readFloatLE(state.readByteIndex));
+    state.readByteIndex += 4;
   }
 
   return ret;

@@ -1,17 +1,19 @@
-module.exports = function XYZIHandler(Buffer, contentStartByteIndex){
-  var readByteIndex = contentStartByteIndex;
-  var numVoxels = Math.abs(Buffer.readInt32LE(readByteIndex));
-  readByteIndex += 4;
+var assert = require('assert');
+
+module.exports = function XYZIHandler(state, startIndex, endIndex){
+  var numVoxels = Math.abs(state.Buffer.readInt32LE(state.readByteIndex));
+  state.readByteIndex += 4;
 
   voxelData = []
   for (var n = 0; n < numVoxels; n++) {
     voxelData[n] = {
-      x: Buffer[readByteIndex++] & 0xFF,
-      y: Buffer[readByteIndex++] & 0xFF,
-      z: Buffer[readByteIndex++] & 0xFF,
-      c: Buffer[readByteIndex++] & 0xFF, //color index in RGBA
+      x: state.Buffer[state.readByteIndex++] & 0xFF,
+      y: state.Buffer[state.readByteIndex++] & 0xFF,
+      z: state.Buffer[state.readByteIndex++] & 0xFF,
+      c: state.Buffer[state.readByteIndex++] & 0xFF, //color index in RGBA
     };
   }
 
+  assert(state.readByteIndex === endIndex, "XYZI chunk did not fully read");
   return voxelData;
 };

@@ -24,9 +24,9 @@ const chunkHandlers = {
   rOBJ: rOBJHandler,
 };
 
-module.exports = function getChunkData(Buffer, id, definitionEndIndex, totalEndIndex){
+module.exports = function getChunkData(state, id, startIndex, endIndex){
   if(!chunkHandlers[id]){
     throw "Unsupported chunk type " + id;
   }
-  return chunkHandlers[id](Buffer, definitionEndIndex, totalEndIndex);
+  return chunkHandlers[id](state, startIndex, endIndex);
 };

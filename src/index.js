@@ -3,7 +3,7 @@ const isBuffer = require('is-buffer');
 const parseHeader = require('./parseHeader');
 const useDefaultPalette = require('./useDefaultPalette');
 const recReadChunksInRange = require('./recReadChunksInRange');
-const readId = require('./readId.js');
+const debug = require('debug');
 const intByteLength = 4;
 
 
@@ -16,7 +16,7 @@ module.exports = function parseMagicaVoxel(BufferLikeData){
       throw ex
     }
   }
-    
+
   var header = parseHeader(buffer);
   var body = recReadChunksInRange(
     buffer,
@@ -29,5 +29,10 @@ module.exports = function parseMagicaVoxel(BufferLikeData){
     body.RGBA = useDefaultPalette();
   }
 
-  return Object.assign(header, body);  
+
+  const result = Object.assign(header, body);
+  //  console.log(JSON.stringify(result.nTRN, null, 2));
+  console.log(result);
+
+  return result;
 };

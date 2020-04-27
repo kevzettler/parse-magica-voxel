@@ -1,8 +1,8 @@
-module.exports = function readId(Buffer, idStartIndexPos){
-  var id = String.fromCharCode(parseInt(Buffer[idStartIndexPos++]))+
-           String.fromCharCode(parseInt(Buffer[idStartIndexPos++]))+
-           String.fromCharCode(parseInt(Buffer[idStartIndexPos++]))+
-           String.fromCharCode(parseInt(Buffer[idStartIndexPos++]));
+module.exports = function readId(state){
+  var id = String.fromCharCode(parseInt(state.Buffer[state.readByteIndex++]))+
+           String.fromCharCode(parseInt(state.Buffer[state.readByteIndex++]))+
+           String.fromCharCode(parseInt(state.Buffer[state.readByteIndex++]))+
+           String.fromCharCode(parseInt(state.Buffer[state.readByteIndex++]));
 
   return id;
 };

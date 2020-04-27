@@ -1,13 +1,11 @@
-module.exports = function RGBAHandler(Buffer, contentStartByteIndex){
-  var readByteIndex = contentStartByteIndex;
-
+module.exports = function RGBAHandler(state, startIndex, endIndex){
   var colors = new Array();
-  for (var n = 1; n < 256; n++) {
+  for (var n = 0; n < 256; n++) {
     colors[n] = {
-      r: Buffer[readByteIndex++],
-      g: Buffer[readByteIndex++],
-      b: Buffer[readByteIndex++],
-      a: Buffer[readByteIndex++],
+      r: state.Buffer[state.readByteIndex++],
+      g: state.Buffer[state.readByteIndex++],
+      b: state.Buffer[state.readByteIndex++],
+      a: state.Buffer[state.readByteIndex++],
     }
   }
   return colors;

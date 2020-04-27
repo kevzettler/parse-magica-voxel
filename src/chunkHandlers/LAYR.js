@@ -1,27 +1,19 @@
-module.exports = function LAYRHandler(Buffer, contentStartByteIndex){
-  var readByteIndex = contentStartByteIndex;
+const readDict = require('../readDict');
+const assert = require('assert');
+
+module.exports = function LAYRHandler(state, startIndex, endIndex){
   var ret = {};
 
   // node id
-  ret.id = Buffer.readInt32LE(readByteIndex);
-  readByteIndex += 4;
+  ret.id = state.Buffer.readInt32LE(state.readByteIndex);
+  state.readByteIndex += 4;
 
   // DICT node attributes
-  ret.attributes = {};
+  ret.attributes = readDict(state);
 
-  const nameByteLength = Buffer.readInt32LE(readByteIndex);
-  readByteIndex += 4;
-
-  const name = Buffer.readInt8(nameByteLength);
-  readByteIndex += 1 * nameByteLength;
-
-  ret.attributes._name = name;
-
-  ret.attributes._hidden = Buffer.readInt32LE(readByteIndex);
-  readByteIndex += 4;
-
-  ret.reserved_id = Buffer.readInt32LE(readByteIndex);
-  readByteIndex += 4;
+  ret.reserved_id = state.Buffer.readInt32LE(state.readByteIndex);
+  assert(ret.reserved_id === -1, 'LAYR reserved_id must be -1');
+  state.readByteIndex += 4;
 
   return ret;
 }

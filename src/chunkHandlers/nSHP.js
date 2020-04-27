@@ -1,32 +1,34 @@
 var readDict = require('../readDict');
+var assert = require('assert');
 
-module.exports = function nSHPHandler(Buffer, contentStartByteIndex){
-  var readByteIndex = contentStartByteIndex;
+module.exports = function nSHPHandler(state, startIndex, endIndex){
   var ret = {};
 
   // node id
-  ret.id = Buffer.readInt32LE(readByteIndex);
-  readByteIndex += 4;
+  ret.id = state.Buffer.readInt32LE(state.readByteIndex);
+  state.readByteIndex += 4;
 
   // DICT node attributes
-  ret.attributes = readDict(Buffer, readByteIndex);
+  ret.attributes = readDict(state);
 
-  ret.num_of_models = Buffer.readInt32LE(readByteIndex);
-  readByteIndex += 4;
+  ret.num_of_models = state.Buffer.readInt32LE(state.readByteIndex);
+  assert(ret.num_of_models >= 1, "nSHP num of models must be 1")
+  state.readByteIndex += 4;
 
   ret.models = [];
   for(var i=0; i<ret.num_of_models; i++){
     const model = {};
-    model.id = Buffer.readInt32LE(readByteIndex);
-    readByteIndex += 4;
+    model.id = state.Buffer.readInt32LE(state.readByteIndex);
+    state.readByteIndex += 4;
 
     // supposed to be a DICT here but marked as reserved in docs
     // https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox-extension.txt#L103
     // might not be valid
-    model.attributes = readDict(Buffer, readByteIndex);
+    model.attributes = readDict(state);
 
-    ret.models.push(models);
+    ret.models.push(model);
   }
 
+  assert(state.readByteIndex === endIndex, `nSHP chunk length mismatch: ${state.readByteIndex} ${endIndex}`);
   return ret;
 }

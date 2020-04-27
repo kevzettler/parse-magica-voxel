@@ -1,13 +1,17 @@
-module.exports = function SIZEHandler(Buffer, contentStartByteIndex){
-  var readByteIndex = contentStartByteIndex;
-  var sizex = Buffer.readInt32LE(readByteIndex);
-  readByteIndex += 4;
+var assert = require('assert');
 
-  var sizey = Buffer.readInt32LE(readByteIndex);
-  readByteIndex += 4;
-  
-  var sizez = Buffer.readInt32LE(readByteIndex);
-  readByteIndex += 4;
+module.exports = function SIZEHandler(state, startIndex, endIndex){
+  var sizex = state.Buffer.readInt32LE(state.readByteIndex);
+  state.readByteIndex += 4;
+
+  var sizey = state.Buffer.readInt32LE(state.readByteIndex);
+  state.readByteIndex += 4;
+
+  var sizez = state.Buffer.readInt32LE(state.readByteIndex);
+  state.readByteIndex += 4;
+
+  assert(state.readByteIndex === endIndex, "Chunk handler didn't reach end");
+
   return {
     x: sizex,
     y: sizey,

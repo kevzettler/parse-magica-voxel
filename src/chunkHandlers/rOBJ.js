@@ -1,10 +1,9 @@
 var readDict = require('../readDict');
 
-module.exports = function rOBJHandler(Buffer, contentStartByteIndex){
-  var readByteIndex = contentStartByteIndex;
+module.exports = function rOBJHandler(state, startIndex, endIndex){
   var ret = {};
 
   // DICT node attributes
-  ret = readDict(Buffer, readByteIndex);
+  ret = readDict(state);
   return ret;
 }

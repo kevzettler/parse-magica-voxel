@@ -1,34 +1,39 @@
 const getChunkData = require('./getChunkData');
 const readId = require('./readId.js');
-const intByteLength = 4;  
 const debug = require('debug')('parse-magica-voxel')
+const assert = require('assert');
+const intByteLength = 4;
 
 module.exports = function recReadChunksInRange(Buffer, bufferStartIndex, bufferEndIndex, accum){
-  var readByteIndex = bufferStartIndex;
-  var id = readId(Buffer, bufferStartIndex);
+  const state = {
+    Buffer,
+    readByteIndex: bufferStartIndex,
+  };
 
-  var chunkContentByteLength = Buffer.readInt32LE(readByteIndex+=intByteLength);
-  readByteIndex += intByteLength;
+  var id = readId(state, bufferStartIndex);
 
-  var childContentByteLength = Buffer.readInt32LE(readByteIndex);
-  readByteIndex += intByteLength;
+  var chunkContentByteLength = Buffer.readInt32LE(state.readByteIndex);
+  state.readByteIndex += intByteLength;
+
+  var childContentByteLength = Buffer.readInt32LE(state.readByteIndex);
+  state.readByteIndex += intByteLength;
 
   var bufferStartIndex = bufferStartIndex;
-  var definitionEndIndex =  readByteIndex;
+  var definitionEndIndex =  state.readByteIndex;
   var contentByteLength = chunkContentByteLength;
   var childContentByteLength = childContentByteLength;
-  var totalEndIndex = readByteIndex + chunkContentByteLength + childContentByteLength;
+  var totalChunkEndIndex = state.readByteIndex + chunkContentByteLength + childContentByteLength;
 
   if(contentByteLength == 0 && childContentByteLength == 0){
-    console.log("no content or children");
     debug("no content or children for", id);
     return accum;
   }
 
   if(contentByteLength && id){
-    var chunkContent = getChunkData(Buffer, id, definitionEndIndex, totalEndIndex);
+    var chunkContent = getChunkData(state, id, definitionEndIndex, totalChunkEndIndex);
+    assert(state.readByteIndex === totalChunkEndIndex, `${id} length mismatch ${state.readByteIndex}:${totalChunkEndIndex}`)
     if(!accum[id]){
-      accum[id] = chunkContent;      
+      accum[id] = chunkContent;
     }else if(accum[id] && !accum[id].length){
       accum[id] = [accum[id], chunkContent];
     }else if(accum[id] && accum[id].length){
@@ -45,9 +50,9 @@ module.exports = function recReadChunksInRange(Buffer, bufferStartIndex, bufferE
   }
 
   //accumulate siblings
-  if(totalEndIndex != bufferEndIndex){
+  if(totalChunkEndIndex != bufferEndIndex){
     return recReadChunksInRange(Buffer,
-                                totalEndIndex,
+                                totalChunkEndIndex,
                                 bufferEndIndex,
                                 accum);
   }
