@@ -31,8 +31,8 @@ module.exports = function parseMagicaVoxel(BufferLikeData){
 
 
   const result = Object.assign(header, body);
-  //  console.log(JSON.stringify(result.nTRN, null, 2));
-  console.log(result);
+  debug('result...');
+  debug(JSON.stringify(result, null, 2))
 
   return result;
 };
