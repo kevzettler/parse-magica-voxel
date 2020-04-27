@@ -1,11 +1,12 @@
 {
   "name": "parse-magica-voxel",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "Parse MagicaVoxel .vox format to JS objects",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "postpublish": "PACKAGE_VERSION=$(cat package.json | grep \\\"version\\\" | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]') && git tag v$PACKAGE_VERSION && git push --tags",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kevzettler/parse-magica-voxel.git"
