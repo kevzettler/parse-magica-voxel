@@ -4,7 +4,7 @@ module.exports = function XYZIHandler(state, startIndex, endIndex){
   var numVoxels = Math.abs(state.Buffer.readInt32LE(state.readByteIndex));
   state.readByteIndex += 4;
 
-  voxelData = []
+  var voxelData = []
   for (var n = 0; n < numVoxels; n++) {
     voxelData[n] = {
       x: state.Buffer[state.readByteIndex++] & 0xFF,
