@@ -9,6 +9,9 @@ const nSHPHandler = require('./chunkHandlers/nSHP');
 const LAYRHandler = require('./chunkHandlers/LAYR');
 const MATLHandler = require('./chunkHandlers/MATL');
 const rOBJHandler = require('./chunkHandlers/rOBJ');
+const rCAMHandler = require('./chunkHandlers/rCAM');
+const NOTEHandler = require('./chunkHandlers/NOTE');
+const IMAPHandler= require('./chunkHandlers/IMAP');
 
 const chunkHandlers = {
   SIZE: SIZEHandler,
