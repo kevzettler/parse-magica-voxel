@@ -22,7 +22,7 @@
     "parser"
   ],
   "author": "kevzettler",
-  "license": "MIT",
+  "license": "GPLv3",
   "bugs": {
     "url": "https://github.com/kevzettler/parse-magica-voxel/issues"
   },
