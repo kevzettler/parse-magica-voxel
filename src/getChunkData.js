@@ -22,6 +22,9 @@ const chunkHandlers = {
   LAYR: LAYRHandler,
   MATL: MATLHandler,
   rOBJ: rOBJHandler,
+  rCAM: rCAMHandler,
+  NOTE: NOTEHandler,
+  IMAP: IMAPHandler
 };
 
 function SKIPHandler(state, _startIndex, endIndex){
