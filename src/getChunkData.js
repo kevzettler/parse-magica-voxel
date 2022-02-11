@@ -24,9 +24,15 @@ const chunkHandlers = {
   rOBJ: rOBJHandler,
 };
 
+function SKIPHandler(state, _startIndex, endIndex){
+  state.readByteIndex = endIndex;
+  return { error: "Unsupported chunk type" };
+}
+
 module.exports = function getChunkData(state, id, startIndex, endIndex){
   if(!chunkHandlers[id]){
-    throw "Unsupported chunk type " + id;
+    console.log("Unsupported chunk type " + id);
+    return SKIPHandler(state, startIndex, endIndex);
   }
   return chunkHandlers[id](state, startIndex, endIndex);
 };
