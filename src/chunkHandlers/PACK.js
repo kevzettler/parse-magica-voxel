@@ -1,3 +1,5 @@
 module.exports = function PACKHandler(state){
-  return state.Buffer.readInt32LE(state.readByteIndex);
+  const PACK_count = state.Buffer.readInt32LE(state.readByteIndex);
+  state.readByteIndex += 4;
+  return PACK_count;
 };
