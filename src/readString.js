@@ -1,5 +1,5 @@
 module.exports = function readString(state){
-  const ret = "";
+  let ret = "";
   const stringLength = state.Buffer.readInt32LE(state.readByteIndex);
   state.readByteIndex += 4;
 
