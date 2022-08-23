@@ -30,7 +30,7 @@ fs.readFile("./chr_old.vox", function (err, Buffer) {
 You will have to bundle the module with Webpack or Browserify and load the voxel file using `fetch` or another `XMLHttpRequest` utility
 ```javascript
 var parseMagicaVoxel = require('parse-magica-voxel');
-var myRequest = new Request('magicavoxel.vox');
+var myRequest = new Request('/example/path/to/your-vox-file.vox');
 fetch(myRequest).then(function(response) {
     return response.arrayBuffer();
   }).then(function(buffer) {
@@ -58,6 +58,5 @@ fetch(myRequest).then(function(response) {
    {r,g,b,a},
    //... more rgba values
   ],
-}       
+}
 ```
-
