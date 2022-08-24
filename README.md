@@ -33,11 +33,9 @@ var parseMagicaVoxel = require('parse-magica-voxel');
 var myRequest = new Request('/example/path/to/your-vox-file.vox');
 fetch(myRequest).then(function(response) {
     return response.arrayBuffer();
-  }).then(function(buffer) {
-     console.log(JSON.stringify(parseMagicaVoxel(Buffer));
-    });
-  });
-};
+}).then(function(buffer) {
+    console.log(JSON.stringify(parseMagicaVoxel(buffer));
+});
 ```
 
 ### Result
